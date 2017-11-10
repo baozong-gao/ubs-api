@@ -1,0 +1,12 @@
+# Routes
+
+# user info
+POST           /api/users                             UserInfoController.seach
+
+# user prod info
+POST           /api/prods                             UserProdInfoController.seach
+
+# user car
+POST           /api/car                               UserCarController.seach
+# other all
+*       /{controller}/{action}                  404

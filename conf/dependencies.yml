@@ -1,0 +1,12 @@
+# Application dependencies
+
+require:
+    - play
+    - com.oracle -> ojdbc5 11.2.0.2.0
+
+repositories:
+    - nexus:
+        type:  http
+        artifact: "http://172.16.1.34:7000/nexus/content/groups/public/[orgPath]/[module]/[revision]/[artifact]-[revision].[ext]"
+        contains:
+            - com.oracle -> *
