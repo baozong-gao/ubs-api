@@ -8,5 +8,9 @@ POST           /api/prods                             UserProdInfoController.sea
 
 # user car
 POST           /api/car                               UserCarController.seach
+
+#illegal
+POST           /api/illegal                           IllegalInfoController.seach
+
 # other all
 *       /{controller}/{action}                  404
