@@ -12,5 +12,8 @@ POST           /api/car                               UserCarController.seach
 #illegal
 POST           /api/illegal                           IllegalInfoController.seach
 
+#illegal city
+POST           /api/illegal/city                      IllegalCityController.seach
+
 # other all
 *       /{controller}/{action}                  404

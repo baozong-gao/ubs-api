@@ -1,5 +1,7 @@
 package models;
 
+import models.dto.IllegalInfoDTO;
+
 import javax.persistence.*;
 
 /**
@@ -10,7 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="WZ_INFO")
-public class IllegalInfo extends BaseModel{
+public class IllegalInfo extends BaseModel<IllegalInfoDTO>{
 
     @Id
     @Column(name = "ID")
