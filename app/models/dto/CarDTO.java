@@ -6,9 +6,8 @@ package models.dto;
  * @Date: Created in 2017/11/10 - 15:31
  * @Version: V1.0
  */
-public class UserCarDTO {
+public class CarDTO {
     public String id;                          //ID
-    public String userId;                      //会员号
     public String carType;                     //车辆类型
     public String carBelong;                   //P 个人 B 单位
     public String carPlateNo;                  //车牌号

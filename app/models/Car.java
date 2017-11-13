@@ -1,23 +1,22 @@
 package models;
 
-import models.dto.UserCarDTO;
+import models.dto.CarDTO;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @Author: gaobaozong
- * @Description: 用户车辆
+ * @Description: 车辆
  * @Date: Created in 2017/11/10 - 15:29
  * @Version: V1.0
  */
 @Entity
-@Table(name="UC_USER_CAR")
-public class UserCar extends BaseModel<UserCarDTO>{
+@Table(name="UC_CAR")
+public class Car extends BaseModel<CarDTO>{
     @Id
     @Column(name="ID")
     public String id;                          //ID
-    @Column(name="USER_ID")
-    public String userId;                      //会员号
     @Column(name="CAR_TYPE")
     public String carType;                     //车辆类型
     @Column(name="CAR_BELONG")
@@ -49,4 +48,8 @@ public class UserCar extends BaseModel<UserCarDTO>{
     @Column(name="LOCK_VERSION")
     @Version
     public Integer lockVersion;                 //
+
+    public static List<Car> findCarByUserId(String userId){
+     return    Car.find("select car from Car as car, ReUserCar as uc where car.id = uc.carId and uc.userId = ?", userId).fetch();
+    }
 }

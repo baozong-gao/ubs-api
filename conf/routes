@@ -7,7 +7,8 @@ POST           /api/users                             UserInfoController.seach
 POST           /api/prods                             UserProdInfoController.seach
 
 # user car
-POST           /api/car                               UserCarController.seach
+POST           /api/car                               CarController.seach
+GET            /api/cars/{userId}                    CarController.findByUser
 
 #illegal
 POST           /api/illegal                           IllegalInfoController.seach

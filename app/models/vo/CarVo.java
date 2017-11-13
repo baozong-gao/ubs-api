@@ -6,10 +6,9 @@ package models.vo;
  * @Date: Created in 2017/11/10 - 15:32
  * @Version: V1.0
  */
-public class UserCarVo {
+public class CarVo {
 
     public String id;                          //ID
-    public String userId;                      //会员号
     public String carType;                     //车辆类型
     public String carBelong;                   //P 个人 B 单位
     public String carPlateNo;                  //车牌号
@@ -29,14 +28,6 @@ public class UserCarVo {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getCarType() {
