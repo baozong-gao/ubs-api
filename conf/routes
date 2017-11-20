@@ -17,8 +17,10 @@ POST           /api/illegal                           IllegalInfoController.seac
 POST           /api/illegal/city                      IllegalCityController.seach
 
 #order
-GET           /api/orders/{orderId}                       OrderController.find
+GET           /api/orders/{orderId}                    OrderController.find
 
+#doc
+POST         /api/illegal/doc                                  IllegalDocController.seach
 
 # other all
 *       /{controller}/{action}                  404

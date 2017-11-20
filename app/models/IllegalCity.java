@@ -3,7 +3,9 @@ package models;
 import models.dto.IllegalCityDTO;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @Author: gaobaozong
@@ -11,6 +13,8 @@ import javax.persistence.Id;
  * @Date: Created in 2017/11/13 - 13:30
  * @Version: V1.0
  */
+@Entity
+@Table(name="WZ_CITY_LIST")
 public class IllegalCity extends BaseModel<IllegalCityDTO>{
     @Id
     @Column(name="ID")
