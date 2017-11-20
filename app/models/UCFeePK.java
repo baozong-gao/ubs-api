@@ -16,11 +16,11 @@ public class UCFeePK implements Serializable {
     @Column(name = "USER_CODE")
     public String userCode;                      //用户号
     @Column(name = "CATEGORY")
-    public String category;                      //产品类型
+    public String category;                      //产品类型  0
     @Column(name = "CATEGORY_ID")
-    public String categoryId;                    //产品ID
+    public String categoryId;                    //产品ID    P001
     @Column(name = "FEE_TYPE")
-    public String feeType;                       //费率类型- 默认费率
+    public String feeType;                       //费率类型- 默认费率  EF -- +  ,ER -- */100
 
 
 }

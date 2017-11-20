@@ -1,5 +1,7 @@
 package models;
 
+import play.db.jpa.GenericModel;
+
 import javax.persistence.*;
 
 /**
@@ -11,7 +13,7 @@ import javax.persistence.*;
 @IdClass(UCFeePK.class)
 @Entity
 @Table(name="UC_FEE")
-public class UCFee {
+public class UCFee extends GenericModel{
     @Id
     @Column(name = "USER_TYPE")
     public String userType;                      //用户类型-0-系统用户 1-机构 2-代理商 3-商户  9-超管

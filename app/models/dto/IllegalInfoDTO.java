@@ -12,4 +12,6 @@ public class IllegalInfoDTO {
 
     @Required(message = "车牌号必输")
     public String carNumber;                //车牌号
+    @Required(message = "用户id必输")
+    public String userId;                   //登入用户id
 }

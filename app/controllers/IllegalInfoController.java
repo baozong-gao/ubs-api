@@ -3,15 +3,20 @@ package controllers;
 import controllers.filter.AuthController;
 import controllers.filter.RequestFilter;
 import models.IllegalInfo;
+import models.UCFee;
+import models.UCFeePK;
 import models.dto.IllegalInfoDTO;
 import models.vo.IllegalInfoVo;
 import models.vo.ResultVo;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import play.Logger;
 import play.mvc.With;
 import util.ApiException;
 import util.BeanUtil;
+import util.Money;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +28,7 @@ import java.util.Optional;
  * @Version: V1.0
  */
 @With({RequestFilter.class, AuthController.class})
-public class IllegalInfoController extends  BaseController<IllegalInfoDTO, IllegalInfo, IllegalInfoVo>{
+public class IllegalInfoController extends BaseController<IllegalInfoDTO, IllegalInfo, IllegalInfoVo> {
 
     /**
      * @Author: gaobaozong
@@ -39,9 +44,45 @@ public class IllegalInfoController extends  BaseController<IllegalInfoDTO, Illeg
             BeanUtil.checkBody(dto, validation);
             List list = new IllegalInfo().findByDTO(dto);
             result = BeanUtil.copyList(list, VClass);
-            Optional.ofNullable(result).ifPresent(s ->{
-                s.stream().forEach(_s ->{
-                    //TODO 费率
+            Optional.ofNullable(result).ifPresent(s -> {
+                s.stream().forEach(_s -> {
+                    UCFeePK pk = new UCFeePK();
+                    pk.userType = "3";
+                    pk.userCode = dto.userId;
+                    pk.category = "0";
+                    pk.categoryId = "P001";
+                    pk.feeType = "ER";
+                    UCFee er = UCFee.findById(pk);
+                    pk.feeType = "EF";
+                    UCFee ef = UCFee.findById(pk);
+                    Optional.ofNullable(er)
+                            .filter(_er -> StringUtils.isNotBlank(_er.feeMode))
+                            .filter(_er -> StringUtils.isNumeric(_er.feeMode))
+                            .ifPresent(_er -> {
+                                Money money = new Money();
+                                money.setAmount(new BigDecimal(_s.payFee));
+                                Double erMode = new BigDecimal(_er.feeMode).divide(new BigDecimal(100)).doubleValue();
+                                money.multiply(erMode);
+                                _s.payFee = money.getYuan()+"";
+                            });
+                    Optional.ofNullable(ef)
+                            .filter(_er -> StringUtils.isNotBlank(_er.feeMode))
+                            .filter(_er -> StringUtils.isNumeric(_er.feeMode))
+                            .ifPresent(_er -> {
+                                Money money = new Money();
+                                money.setAmount(new BigDecimal(_s.payFee));
+                                money.add(new Money(_er.feeMode));
+                                _s.payFee = money.getYuan()+"";
+                            });
+                    Optional.ofNullable(_s.payFee)
+                            .filter(_fee -> StringUtils.isNumeric(_fee))
+                            .ifPresent(_fee ->{
+                                double x = Double.parseDouble(_fee);
+                                long y = (long)x;
+                                double z = x - y;
+                                long l = z > 0 ? 1 : 0;
+                                _s.payFee = (y + l)+"";
+                            });
                 });
             });
         } catch (ApiException e) {
@@ -53,6 +94,11 @@ public class IllegalInfoController extends  BaseController<IllegalInfoDTO, Illeg
         renderJSON(ResultVo.succeed(result));
     }
 
-
-
+    public static void main(String[] args) {
+        double x = Double.parseDouble("00");
+        long y = (long)x;
+        double z = x - y;
+        long l = z > 0 ? 1 : 0;
+        System.out.printf((y + l)+"");
+    }
 }
