@@ -22,5 +22,9 @@ GET           /api/orders/{orderId}                    OrderController.find
 #doc
 POST         /api/illegal/doc                                  IllegalDocController.seach
 
+#illegal order
+POST         /api/illegal/order                        IllegalOrderController.seach
+
+
 # other all
 *       /{controller}/{action}                  404
