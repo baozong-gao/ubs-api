@@ -8,13 +8,17 @@ POST           /api/prods                             UserProdInfoController.sea
 
 # user car
 POST           /api/car                               CarController.seach
-GET            /api/cars/{userId}                    CarController.findByUser
+GET            /api/cars/{userId}                     CarController.findByUser
 
 #illegal
 POST           /api/illegal                           IllegalInfoController.seach
 
 #illegal city
 POST           /api/illegal/city                      IllegalCityController.seach
+
+#order
+GET           /api/orders/{orderId}                       OrderController.find
+
 
 # other all
 *       /{controller}/{action}                  404
