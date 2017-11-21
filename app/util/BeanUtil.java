@@ -5,7 +5,9 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang.reflect.FieldUtils;
 import play.Logger;
+import play.data.validation.Required;
 import play.data.validation.Validation;
 
 import java.beans.PropertyDescriptor;
@@ -100,10 +102,14 @@ public class BeanUtil {
         PropertyDescriptor origDescriptors[] = PropertyUtils.getPropertyDescriptors(src);
         for (int i = 0; i < origDescriptors.length; i++) {
             String name = origDescriptors[i].getName();
+            origDescriptors[i].getReadMethod().isAnnotationPresent(Required.class);
             if ("class".equals(name)) {
                 continue;
             }
             try {
+                if(FieldUtils.getField(src.getClass(),name).isAnnotationPresent(NotSearchField.class)){
+                    continue;
+                }
                 Object value = PropertyUtils.getSimpleProperty(src, name);
                 if (value != null) {
                     fieldValue.put(name, value);

@@ -21,6 +21,4 @@ public class UCFeePK implements Serializable {
     public String categoryId;                    //产品ID    P001
     @Column(name = "FEE_TYPE")
     public String feeType;                       //费率类型- 默认费率  EF -- +  ,ER -- */100
-
-
 }

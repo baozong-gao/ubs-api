@@ -15,7 +15,6 @@ import play.Logger;
 import play.mvc.With;
 import util.ApiException;
 import util.BeanUtil;
-import util.Money;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -54,8 +53,13 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
                     pk.categoryId = "P001";
                     pk.feeType = "ER";
                     UCFee er = UCFee.findById(pk);
-                    pk.feeType = "EF";
-                    UCFee ef = UCFee.findById(pk);
+                    UCFeePK pk1 = new UCFeePK();
+                    pk1.userType = "3";
+                    pk1.userCode = dto.userId;
+                    pk1.category = "0";
+                    pk1.categoryId = "P001";
+                    pk1.feeType = "EF";
+                    UCFee ef = UCFee.findById(pk1);
                     Optional.ofNullable(er)
                             .filter(_er -> StringUtils.isNotBlank(_er.feeMode))
                             .filter(_er -> NumberUtils.isNumber(_er.feeMode))
@@ -71,12 +75,12 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
                             });
                     Optional.ofNullable(_s.payFee)
                             .filter(_fee -> NumberUtils.isNumber(_fee))
-                            .ifPresent(_fee ->{
+                            .ifPresent(_fee -> {
                                 double x = Double.parseDouble(_fee);
-                                long y = (long)x;
+                                long y = (long) x;
                                 double z = x - y;
                                 long l = z > 0 ? 1 : 0;
-                                _s.payFee = (y + l)+"";
+                                _s.payFee = (y + l) + "";
                             });
                 });
             });
