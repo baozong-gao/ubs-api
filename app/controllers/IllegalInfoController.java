@@ -10,6 +10,7 @@ import models.vo.IllegalInfoVo;
 import models.vo.ResultVo;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import play.Logger;
 import play.mvc.With;
 import util.ApiException;
@@ -57,25 +58,19 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
                     UCFee ef = UCFee.findById(pk);
                     Optional.ofNullable(er)
                             .filter(_er -> StringUtils.isNotBlank(_er.feeMode))
-                            .filter(_er -> StringUtils.isNumeric(_er.feeMode))
+                            .filter(_er -> NumberUtils.isNumber(_er.feeMode))
                             .ifPresent(_er -> {
-                                Money money = new Money();
-                                money.setAmount(new BigDecimal(_s.payFee));
-                                Double erMode = new BigDecimal(_er.feeMode).divide(new BigDecimal(100)).doubleValue();
-                                money.multiply(erMode);
-                                _s.payFee = money.getYuan()+"";
+                                BigDecimal erMode = new BigDecimal(_er.feeMode).divide(new BigDecimal(100));
+                                _s.payFee = new BigDecimal(_s.payFee).multiply(erMode).toString();
                             });
                     Optional.ofNullable(ef)
                             .filter(_er -> StringUtils.isNotBlank(_er.feeMode))
-                            .filter(_er -> StringUtils.isNumeric(_er.feeMode))
+                            .filter(_er -> NumberUtils.isNumber(_er.feeMode))
                             .ifPresent(_er -> {
-                                Money money = new Money();
-                                money.setAmount(new BigDecimal(_s.payFee));
-                                money.add(new Money(_er.feeMode));
-                                _s.payFee = money.getYuan()+"";
+                                _s.payFee = new BigDecimal(_s.payFee).add(new BigDecimal(_er.feeMode)).toString();
                             });
                     Optional.ofNullable(_s.payFee)
-                            .filter(_fee -> StringUtils.isNumeric(_fee))
+                            .filter(_fee -> NumberUtils.isNumber(_fee))
                             .ifPresent(_fee ->{
                                 double x = Double.parseDouble(_fee);
                                 long y = (long)x;
@@ -95,10 +90,12 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
     }
 
     public static void main(String[] args) {
-        double x = Double.parseDouble("00");
-        long y = (long)x;
-        double z = x - y;
-        long l = z > 0 ? 1 : 0;
-        System.out.printf((y + l)+"");
+        String payFee = "1.1";
+        String feeMode = "0.38";
+        Money money = new Money();
+        money.setAmount(new BigDecimal(payFee));
+        Double erMode = new BigDecimal(feeMode).divide(new BigDecimal(100)).doubleValue();
+        money.multiply(erMode);
+        System.out.printf(money.getYuan()+"");
     }
 }
