@@ -88,14 +88,4 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
         }
         renderJSON(ResultVo.succeed(result));
     }
-
-    public static void main(String[] args) {
-        String payFee = "1.1";
-        String feeMode = "0.38";
-        Money money = new Money();
-        money.setAmount(new BigDecimal(payFee));
-        Double erMode = new BigDecimal(feeMode).divide(new BigDecimal(100)).doubleValue();
-        money.multiply(erMode);
-        System.out.printf(money.getYuan()+"");
-    }
 }
