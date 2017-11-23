@@ -18,9 +18,7 @@ import util.ApiException;
 import util.BeanUtil;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @Author: gaobaozong
@@ -102,7 +100,7 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
      * @return:
      */
     public static void findByUser(String userId) {
-        List<IllegalInfoVo> result = new ArrayList<>();
+        Map<String, List<IllegalInfoVo>> result = new HashMap<>();
         try {
             List<String> carNo = new ArrayList<>();
             List<Car> cars = Car.findCarByUserId(userId);
@@ -113,7 +111,20 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
             });
             List<IllegalInfo> illegalInfos = IllegalInfo.findByCarNo(carNo);
             Optional.ofNullable(illegalInfos).ifPresent(list ->{
-                result.addAll(BeanUtil.copyList(illegalInfos, IllegalInfoVo.class));
+                list.stream().forEach(illegal ->{
+                    try {
+                        List<IllegalInfoVo> illegals = Optional.ofNullable(result.get(illegal.carNumber))
+                                .orElseGet(() -> {
+                                    result.put(illegal.carNumber, new ArrayList<IllegalInfoVo>());
+                                    return result.get(illegal.carNumber);
+                                });
+                        IllegalInfoVo desc = new IllegalInfoVo();
+                        BeanUtil.copy(illegal, desc);
+                        illegals.add(desc);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                });
             });
         }catch (Exception e){
             Logger.error("查询用户违章异常\n %s", ExceptionUtils.getStackTrace(e));
