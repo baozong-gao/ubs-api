@@ -3,6 +3,7 @@ package models;
 import models.dto.IllegalInfoDTO;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @Author: gaobaozong
@@ -108,4 +109,11 @@ public class IllegalInfo extends BaseModel<IllegalInfoDTO>{
     public String createTime;               //创建日期
     @Column(name = "UPDATE_TIME")
     public String updateTime;               //更新日期
+
+    public static List<IllegalInfo> findByCarNo(List<String> carNo){
+        if(carNo == null || carNo.size() ==0){
+            return null;
+        }
+       return IllegalInfo.find("carNumber in (?)", carNo.toArray()).fetch();
+    }
 }

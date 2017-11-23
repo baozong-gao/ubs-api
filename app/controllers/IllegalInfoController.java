@@ -2,6 +2,7 @@ package controllers;
 
 import controllers.filter.AuthController;
 import controllers.filter.RequestFilter;
+import models.Car;
 import models.IllegalInfo;
 import models.UCFee;
 import models.UCFeePK;
@@ -92,4 +93,33 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
         }
         renderJSON(ResultVo.succeed(result));
     }
+
+    /**
+     * @Author: gaobaozong
+     * @Description: 用户违章
+     * @Date: Created in 2017/11/23 - 11:47
+     * @param:
+     * @return:
+     */
+    public static void findByUser(String userId) {
+        List<IllegalInfoVo> result = new ArrayList<>();
+        try {
+            List<String> carNo = new ArrayList<>();
+            List<Car> cars = Car.findCarByUserId(userId);
+            Optional.ofNullable(cars).ifPresent(_cars -> {
+                _cars.stream().forEach(car -> {
+                    carNo.add(car.carPlateNo);
+                });
+            });
+            List<IllegalInfo> illegalInfos = IllegalInfo.findByCarNo(carNo);
+            Optional.ofNullable(illegalInfos).ifPresent(list ->{
+                result.addAll(BeanUtil.copyList(illegalInfos, IllegalInfoVo.class));
+            });
+        }catch (Exception e){
+            Logger.error("查询用户违章异常\n %s", ExceptionUtils.getStackTrace(e));
+            renderJSON(ResultVo.error("查询 异常"));
+        }
+        renderJSON(ResultVo.succeed(result));
+    }
+
 }
