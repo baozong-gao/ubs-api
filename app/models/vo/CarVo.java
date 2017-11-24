@@ -22,6 +22,16 @@ public class CarVo {
     public String modifySource;                //
     public String modifyUser;                  //
 
+    public String bindId;
+
+    public String getBindId() {
+        return bindId;
+    }
+
+    public void setBindId(String bindId) {
+        this.bindId = bindId;
+    }
+
     public String getId() {
         return id;
     }

@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.List;
 
 /**
  * @Author: gaobaozong
@@ -30,6 +31,8 @@ public class ReUserCar extends GenericModel {
     @Column(name = "USER_CAR_RESV3")
     public String userCarResv3;
 
-
+    public static ReUserCar findByCarId(String carId){
+      return   ReUserCar.find("carId = ?" , carId).first();
+    }
 
 }
