@@ -114,7 +114,9 @@ public class IllegalInfo extends BaseModel<IllegalInfoDTO>{
         if(carNo == null || carNo.size() ==0){
             return null;
         }
-        return IllegalInfo.em().createQuery("FROM IllegalInfo WHERE carNumber in (:cars)").setParameter("cars",carNo).getResultList();
-//       return IllegalInfo.find("carNumber in (?)", carNo.toArray()).fetch();
+        return IllegalInfo.em()
+                .createQuery("FROM IllegalInfo WHERE carNumber in (:cars)")
+                .setParameter("cars",carNo)
+                .getResultList();
     }
 }
