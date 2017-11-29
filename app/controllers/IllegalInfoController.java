@@ -107,6 +107,7 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
             Optional.ofNullable(cars).ifPresent(_cars -> {
                 _cars.stream().forEach(car -> {
                     carNo.add(car.carPlateNo);
+                    result.put(car.carPlateNo, null);
                 });
             });
             List<IllegalInfo> illegalInfos = IllegalInfo.findByCarNo(carNo);
