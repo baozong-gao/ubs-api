@@ -64,22 +64,22 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
                             .filter(_er -> NumberUtils.isNumber(_er.feeMode))
                             .ifPresent(_er -> {
                                 BigDecimal erMode = new BigDecimal(_er.feeMode).divide(new BigDecimal(100));
-                                _s.payFee = new BigDecimal(_s.payFee).multiply(erMode).toString();
+                                _s.serviceFee = new BigDecimal(_s.serviceFee).multiply(erMode).toString();
                             });
                     Optional.ofNullable(ef)
                             .filter(_er -> StringUtils.isNotBlank(_er.feeMode))
                             .filter(_er -> NumberUtils.isNumber(_er.feeMode))
                             .ifPresent(_er -> {
-                                _s.payFee = new BigDecimal(_s.payFee).add(new BigDecimal(_er.feeMode)).toString();
+                                _s.serviceFee = new BigDecimal(_s.serviceFee).add(new BigDecimal(_er.feeMode)).toString();
                             });
-                    Optional.ofNullable(_s.payFee)
+                    Optional.ofNullable(_s.serviceFee)
                             .filter(_fee -> NumberUtils.isNumber(_fee))
                             .ifPresent(_fee -> {
                                 double x = Double.parseDouble(_fee);
                                 long y = (long) x;
                                 double z = x - y;
                                 long l = z > 0 ? 1 : 0;
-                                _s.payFee = (y + l) + "";
+                                _s.serviceFee = (y + l) + "";
                             });
                 });
             });
