@@ -43,46 +43,7 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
             BeanUtil.checkBody(dto, validation);
             List list = new IllegalInfo().findByDTO(dto);
             result = BeanUtil.copyList(list, VClass);
-            Optional.ofNullable(result).ifPresent(s -> {
-                s.stream().forEach(_s -> {
-                    UCFeePK pk = new UCFeePK();
-                    pk.userType = "3";
-                    pk.userCode = dto.userId;
-                    pk.category = "0";
-                    pk.categoryId = "P001";
-                    pk.feeType = "ER";
-                    UCFee er = UCFee.findById(pk);
-                    UCFeePK pk1 = new UCFeePK();
-                    pk1.userType = "3";
-                    pk1.userCode = dto.userId;
-                    pk1.category = "0";
-                    pk1.categoryId = "P001";
-                    pk1.feeType = "EF";
-                    UCFee ef = UCFee.findById(pk1);
-                    Optional.ofNullable(er)
-                            .filter(_er -> StringUtils.isNotBlank(_er.feeMode))
-                            .filter(_er -> NumberUtils.isNumber(_er.feeMode))
-                            .ifPresent(_er -> {
-                                BigDecimal erMode = new BigDecimal(_er.feeMode).divide(new BigDecimal(100));
-                                _s.serviceFee = new BigDecimal(_s.serviceFee).multiply(erMode).toString();
-                            });
-                    Optional.ofNullable(ef)
-                            .filter(_er -> StringUtils.isNotBlank(_er.feeMode))
-                            .filter(_er -> NumberUtils.isNumber(_er.feeMode))
-                            .ifPresent(_er -> {
-                                _s.serviceFee = new BigDecimal(_s.serviceFee).add(new BigDecimal(_er.feeMode)).toString();
-                            });
-                    Optional.ofNullable(_s.serviceFee)
-                            .filter(_fee -> NumberUtils.isNumber(_fee))
-                            .ifPresent(_fee -> {
-                                double x = Double.parseDouble(_fee);
-                                long y = (long) x;
-                                double z = x - y;
-                                long l = z > 0 ? 1 : 0;
-                                _s.serviceFee = (y + l) + "";
-                            });
-                });
-            });
+            countFree(result, dto.userId);
         } catch (ApiException e) {
             throw e;
         } catch (Exception e) {
@@ -90,6 +51,49 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
             renderJSON(ResultVo.error("查询 异常"));
         }
         renderJSON(ResultVo.succeed(result));
+    }
+
+    private static void countFree(List<IllegalInfoVo> result, String userId) {
+        Optional.ofNullable(result).ifPresent(s -> {
+            s.stream().forEach(_s -> {
+                UCFeePK pk = new UCFeePK();
+                pk.userType = "3";
+                pk.userCode = userId;
+                pk.category = "0";
+                pk.categoryId = "P001";
+                pk.feeType = "ER";
+                UCFee er = UCFee.findById(pk);
+                UCFeePK pk1 = new UCFeePK();
+                pk1.userType = "3";
+                pk1.userCode = userId;
+                pk1.category = "0";
+                pk1.categoryId = "P001";
+                pk1.feeType = "EF";
+                UCFee ef = UCFee.findById(pk1);
+                Optional.ofNullable(er)
+                        .filter(_er -> StringUtils.isNotBlank(_er.feeMode))
+                        .filter(_er -> NumberUtils.isNumber(_er.feeMode))
+                        .ifPresent(_er -> {
+                            BigDecimal erMode = new BigDecimal(_er.feeMode).divide(new BigDecimal(100));
+                            _s.serviceFee = new BigDecimal(_s.serviceFee).multiply(erMode).toString();
+                        });
+                Optional.ofNullable(ef)
+                        .filter(_er -> StringUtils.isNotBlank(_er.feeMode))
+                        .filter(_er -> NumberUtils.isNumber(_er.feeMode))
+                        .ifPresent(_er -> {
+                            _s.serviceFee = new BigDecimal(_s.serviceFee).add(new BigDecimal(_er.feeMode)).toString();
+                        });
+                Optional.ofNullable(_s.serviceFee)
+                        .filter(_fee -> NumberUtils.isNumber(_fee))
+                        .ifPresent(_fee -> {
+                            double x = Double.parseDouble(_fee);
+                            long y = (long) x;
+                            double z = x - y;
+                            long l = z > 0 ? 1 : 0;
+                            _s.serviceFee = (y + l) + "";
+                        });
+            });
+        });
     }
 
     /**
@@ -126,6 +130,11 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
                         e.printStackTrace();
                     }
                 });
+            });
+            result.keySet().stream().forEach(_key ->{
+                try {
+                    countFree(result.get(_key), userId);
+                }catch (Exception e){}
             });
         }catch (Exception e){
             Logger.error("查询用户违章异常\n %s", ExceptionUtils.getStackTrace(e));
