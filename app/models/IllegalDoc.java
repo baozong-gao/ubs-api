@@ -29,7 +29,8 @@ public class IllegalDoc extends BaseModel<IllegalDocDTO>{
     @Column(name = "STATUS")
     public String status;                //文档状态0:未处理，1:已添加
     @Column(name = "DOC_LOCATION")
-    public String docLocation;           //文档地址
+    @Lob
+    public byte[] docLocation;           //文档地址
     @Column(name = "EXT1")
     public String ext1;                  //扩展域1
     @Column(name = "EXT2")

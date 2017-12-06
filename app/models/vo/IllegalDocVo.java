@@ -15,7 +15,7 @@ public class IllegalDocVo {
     public String optionAble;            //为1时表示可选填，其他必填
     public String reqLength;             //长度
     public String status;                //文档状态0:未处理，1:已添加
-    public String docLocation;           //文档地址
+    public byte [] docLocation;           //文档地址
     public String ext1;                  //扩展域1
     public String ext2;                  //扩展域2
     public String ext3;                  //扩展域3
@@ -81,11 +81,11 @@ public class IllegalDocVo {
         this.status = status;
     }
 
-    public String getDocLocation() {
+    public byte[] getDocLocation() {
         return docLocation;
     }
 
-    public void setDocLocation(String docLocation) {
+    public void setDocLocation(byte[] docLocation) {
         this.docLocation = docLocation;
     }
 
