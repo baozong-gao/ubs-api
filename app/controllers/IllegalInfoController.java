@@ -144,11 +144,14 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
         renderJSON(ResultVo.succeed(result));
     }
 
-    public static void upIllegalStatus(String illegalId, String status) {
+    public static void upIllegalStatus(String illegalId, String status) throws Exception{
         try {
             IllegalInfo illegal = IllegalInfo.findById(illegalId);
+            Optional.ofNullable(illegal).orElseThrow(() ->new ApiException("违章记录不存在"));
             illegal.status = status;
             illegal.save();
+        } catch (ApiException e) {
+            throw e;
         } catch (Exception e) {
             Logger.error("更新违章异常\n %s", ExceptionUtils.getStackTrace(e));
             renderJSON(ResultVo.error("更新 失败"));
