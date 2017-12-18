@@ -115,8 +115,8 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
                 });
             });
             List<IllegalInfo> illegalInfos = IllegalInfo.findByCarNo(carNo);
-            Optional.ofNullable(illegalInfos).ifPresent(list ->{
-                list.stream().forEach(illegal ->{
+            Optional.ofNullable(illegalInfos).ifPresent(list -> {
+                list.stream().forEach(illegal -> {
                     try {
                         List<IllegalInfoVo> illegals = Optional.ofNullable(result.get(illegal.carNumber))
                                 .orElseGet(() -> {
@@ -126,21 +126,34 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
                         IllegalInfoVo desc = new IllegalInfoVo();
                         BeanUtil.copy(illegal, desc);
                         illegals.add(desc);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
             });
-            result.keySet().stream().forEach(_key ->{
+            result.keySet().stream().forEach(_key -> {
                 try {
                     countFree(result.get(_key), userId);
-                }catch (Exception e){}
+                } catch (Exception e) {
+                }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             Logger.error("查询用户违章异常\n %s", ExceptionUtils.getStackTrace(e));
             renderJSON(ResultVo.error("查询 异常"));
         }
         renderJSON(ResultVo.succeed(result));
+    }
+
+    public static void upIllegalStatus(String illegalId, String status) {
+        try {
+            IllegalInfo illegal = IllegalInfo.findById(illegalId);
+            illegal.status = status;
+            illegal.save();
+        } catch (Exception e) {
+            Logger.error("更新违章异常\n %s", ExceptionUtils.getStackTrace(e));
+            renderJSON(ResultVo.error("更新 失败"));
+        }
+        renderJSON(ResultVo.succeed());
     }
 
 }

@@ -13,6 +13,7 @@ GET            /api/cars/{userId}                     CarController.findByUser
 #illegal
 POST           /api/illegal                           IllegalInfoController.seach
 GET            /api/illegals/users/{userId}           IllegalInfoController.findByUser
+PUT            /api/illegal/{illegalId}/{status}      IllegalInfoController.upIllegalStatus
 #illegal city
 POST           /api/illegal/city                      IllegalCityController.seach
 
