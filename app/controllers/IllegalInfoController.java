@@ -146,7 +146,7 @@ public class IllegalInfoController extends BaseController<IllegalInfoDTO, Illega
 
     public static void upIllegalStatus(String illegalId, String status) throws Exception{
         try {
-            IllegalInfo illegal = IllegalInfo.findById(illegalId);
+            IllegalInfo illegal = IllegalInfo.findByWzId(illegalId);
             Optional.ofNullable(illegal).orElseThrow(() ->new ApiException("违章记录不存在"));
             illegal.status = status;
             illegal.save();

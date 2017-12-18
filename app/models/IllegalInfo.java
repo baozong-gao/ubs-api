@@ -119,4 +119,12 @@ public class IllegalInfo extends BaseModel<IllegalInfoDTO>{
                 .setParameter("cars",carNo)
                 .getResultList();
     }
+
+    public static IllegalInfo findByWzId(String id){
+        List<IllegalInfo> list = IllegalInfo.find("wzId =? ",id).fetch();
+        if(list == null || list.size()!=1){
+            return null;
+        }
+        return list.get(0);
+    }
 }
